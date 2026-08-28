@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gpu-prometheus-exporter"
+version = "0.1.0"
+description = "Unified Prometheus exporter for AMD, Intel, and NVIDIA GPUs plus CPU metrics"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "prometheus-client>=0.20.0",
+    "pynvml>=11.5.0",
+    "pyrsmi>=1.0.3; sys_platform == 'linux'",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.4"]
+
+[project.scripts]
+gpu-exporter = "gpu_exporter.main:main"

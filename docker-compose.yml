@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  gpu-exporter:
+    build: .
+    container_name: gpu-exporter
+    restart: unless-stopped
+    ports:
+      - "${EXPORTER_PORT:-9102}:9102"
+    environment:
+      - EXPORTER_INTERVAL=${EXPORTER_INTERVAL:-5}
+      - EXPORTER_HOST=0.0.0.0
+    volumes:
+      # Mount sysfs for hwmon sensors (CPU temp, fan)
+      - /sys/class/hwmon:/sys/class/hwmon:ro
+      - /sys/class/thermal:/sys/class/thermal:ro
+      # Mount powercap for RAPL CPU power
+      - /sys/class/powercap/intel-rapl-0:/sys/class/powercap/intel-rapl-0:ro
+    devices:
+      # NVIDIA GPUs (requires nvidia-container-toolkit)
+      - /dev/nvidiactl
+      - /dev/nvidia-uvm
+      - /dev/nvidia0
+      - /dev/nvidia1
+      - /dev/nvidia2
+      - /dev/nvidia3
+      # AMD GPUs (ROCm)
+      - /dev/kfd
+      - /dev/dri/renderD128
+      - /dev/dri/card0
+      - /dev/dri/card1
+      # Intel GPUs (i915/xe driver)
+      - /dev/dri/renderD128
+      - /dev/dri/card0
+    cap_add:
+      - SYS_RAWIO  # Required for hwmon/RAPL access

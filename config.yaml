@@ -1,0 +1,15 @@
+# GPU Prometheus Exporter Configuration
+exporter:
+  port: 9102          # HTTP port for metrics endpoint
+  host: "0.0.0.0"     # Bind address
+  interval: 5         # Collection interval in seconds
+
+collectors:
+  nvidia: true        # Enable NVIDIA GPU collection (requires pynvml + driver)
+  amd: true           # Enable AMD GPU collection (requires pyrsmi + ROCm)
+  intel: true         # Enable Intel GPU collection (requires i915/xe kernel module)
+  cpu: true           # Enable CPU metrics (temp, power via RAPL/hwmon)
+
+# Labels applied to all metrics
+labels:
+  env: "production"   # Override with your environment name
